@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Vehicles.Car;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public Transform[] nitroPoints;
+    public Transform[] fuelPoints;
+    public Transform[] enemyPoints;
+    public GameObject nitroBottle;
+    public GameObject fuelBarrel;
+    public GameObject enemy;
+    public GameObject fullMap;
+    public Transform player;
+
     public static GameManager GM;
     public Slider nitroSlider;
     public Image nitroSliderImage;
@@ -14,13 +24,19 @@ public class GameManager : MonoBehaviour
     public Transform nitroArrow;
     public Image nitroDisplay;
     public float fuelConsumption;
-    float timeToFuelConsumption = 1f;
+    public float timeToFuelConsumption = 1f;
     float timerFuel;
+    float timerNitroInst;
+    float timerFuelInst;
+    float timerEnemyInst;
+
+
     bool nitroPresedd;
+    bool isFullMap;
     Color nitroDisplayColor;
     Color nitroSliderColor;
     Color fuelSliderColor;
-
+    Transform currentNitroPoint;
 
     void Start()
     {
@@ -28,10 +44,46 @@ public class GameManager : MonoBehaviour
         nitroDisplayColor = nitroDisplay.color;
         nitroSliderColor = nitroSliderImage.color;
         fuelSliderColor = fuelSliderImage.color;
+        isFullMap = false;
     }
     
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.M))
+        {
+            isFullMap = !isFullMap;
+        }
+        fullMap.SetActive(isFullMap);
+        if (GameObject.FindWithTag("nitro") == null)
+        {
+            timerNitroInst += Time.deltaTime;
+            if (timerNitroInst > 3)
+            {
+                InstantiateNitroBottle();
+                timerNitroInst = 0;
+            }
+        }
+
+        if (GameObject.FindWithTag("barrel") == null)
+        {
+            timerFuelInst += Time.deltaTime;
+            if (timerFuelInst > 3)
+            {
+                InstantiateFuelBarrel();
+                timerFuelInst = 0;
+            }
+        }
+
+        if (GameObject.FindWithTag("enemy") == null)
+        {
+            timerEnemyInst += Time.deltaTime;
+            if (timerEnemyInst > 3)
+            {
+                InstantiateEnemy();
+                timerEnemyInst = 0;
+            }
+        }
+
         timerFuel += Time.deltaTime;
         if (timerFuel > timeToFuelConsumption)
         {
@@ -43,7 +95,6 @@ public class GameManager : MonoBehaviour
             nitroPresedd = !nitroPresedd;
         }
         CarController.carController.nitroPressed = nitroPresedd;
-
         if (nitroPresedd)
         {
             ChangeNitroColorRed();
@@ -52,11 +103,10 @@ public class GameManager : MonoBehaviour
         {
             ChangeNitroColorOrigin();
         }
-
         if (nitroPresedd && CarController.carController.AccelInput > 0.8f)
         {
             fuelConsumption = 5;
-            NitroArrowDown(1);
+            NitroArrowDown(0);
             if (NitroArrow.arrow.sliderNitro.value < 1)
             {
                 nitroPresedd = false;
@@ -66,7 +116,6 @@ public class GameManager : MonoBehaviour
         {
             fuelConsumption = 1;
         }
-
     }
 
     public void IncreaseFuel(float fuelValue)
@@ -81,6 +130,14 @@ public class GameManager : MonoBehaviour
     public void DecreaseFuel(float fuelValue)
     {
         fuelSlider.value -= fuelValue;
+        if (fuelSlider.value < 1)
+        {
+            Time.timeScale = 0.1f;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
     }
 
     public void NitroArrowUp(float value)
@@ -107,5 +164,29 @@ public class GameManager : MonoBehaviour
         nitroSliderImage.color = nitroSliderColor;
         fuelSliderImage.color = fuelSliderColor;
 
+    }
+
+    public void InstantiateNitroBottle()
+    {
+        for (int i = 0; i < nitroPoints.Length; i++)
+        {
+            Instantiate(nitroBottle, nitroPoints[i].position, Quaternion.identity);
+        }
+    }
+
+    public void InstantiateFuelBarrel()
+    {
+        for (int i = 0; i < fuelPoints.Length; i++)
+        {
+            Instantiate(fuelBarrel, fuelPoints[i].position, Quaternion.identity);
+        }
+    }
+
+    public void InstantiateEnemy()
+    {
+        for (int i = 0; i < enemyPoints.Length; i++)
+        {
+            Instantiate(enemy, enemyPoints[i].position, Quaternion.identity);
+        }
     }
 }

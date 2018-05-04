@@ -47,8 +47,9 @@ public class FuelBarrels : MonoBehaviour
         if (other.tag == "car")
         {
             GameManager.GM.IncreaseFuel(30);
+            Instantiate(afterEffect, this.transform.position, Quaternion.identity);
+            Destroy(gameObject, 0.2f);
         }
-        Instantiate(afterEffect, this.transform.position, Quaternion.identity);
-        Destroy(gameObject,0.2f);
+        
     }
 }

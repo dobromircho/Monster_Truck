@@ -40,8 +40,9 @@ public class NitroBottle : MonoBehaviour
         if (other.tag == "car")
         {
             GameManager.GM.NitroArrowUp(150);
+            Instantiate(afterEffect, this.transform.position, Quaternion.identity);
+            Destroy(gameObject, 0.1f);
         }
-        Instantiate(afterEffect, this.transform.position, Quaternion.identity);
-        Destroy(gameObject,0.1f);
+        
     }
 }

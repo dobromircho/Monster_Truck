@@ -27,7 +27,7 @@ namespace UnityStandardAssets.Vehicles.Car
              v = CrossPlatformInputManager.GetAxis("Vertical");
 #if !MOBILE_INPUT
             float handbrake = CrossPlatformInputManager.GetAxis("Jump");
-            if (Input.GetKey(KeyCode.C))
+            if (Input.GetKeyUp(KeyCode.C))
             {
                 horn.Play();
             }

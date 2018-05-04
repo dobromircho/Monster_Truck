@@ -103,6 +103,8 @@
     <Compile Include="Assets\IMPORTED_STUFF\RainMaker\Prefab\RainScript.cs" />
     <Compile Include="Assets\IMPORTED_STUFF\RainMaker\Prefab\RainScript2D.cs" />
     <Compile Include="Assets\_Scripts\ArrowHalo.cs" />
+    <Compile Include="Assets\_Scripts\Enemy.cs" />
+    <Compile Include="Assets\_Scripts\EnemyHit.cs" />
     <Compile Include="Assets\_Scripts\FuelBarrels.cs" />
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\NitroArrow.cs" />
