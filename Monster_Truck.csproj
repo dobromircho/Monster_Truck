@@ -104,6 +104,7 @@
     <Compile Include="Assets\IMPORTED_STUFF\RainMaker\Prefab\RainScript2D.cs" />
     <Compile Include="Assets\_Scripts\ArrowColor.cs" />
     <Compile Include="Assets\_Scripts\ArrowHalo.cs" />
+    <Compile Include="Assets\_Scripts\AutoSave.cs" />
     <Compile Include="Assets\_Scripts\CarColor.cs" />
     <Compile Include="Assets\_Scripts\Enemy.cs" />
     <Compile Include="Assets\_Scripts\EnemyHit.cs" />
