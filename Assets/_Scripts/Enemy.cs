@@ -5,7 +5,6 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     Transform target;
-    Transform tempTarget;
     public float distance;
     public float speed;
     Animator animator;
@@ -15,8 +14,10 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        target = GameObject.FindGameObjectWithTag("Player").transform;
-        tempTarget = target;
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+        }
     }
     
     void Update()
@@ -39,7 +40,7 @@ public class Enemy : MonoBehaviour
         transform.LookAt(target);
         if (distance > 7 && distance < 100)
         {
-            transform.Translate(new Vector3(0, 1f * speed * Time.deltaTime, 1 * speed * Time.deltaTime));
+            transform.Translate(new Vector3(0, 0.5f * speed * Time.deltaTime, 1 * speed * Time.deltaTime));
         }
         if (distance > 50)
         {

@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     public GameObject fuelBarrel;
     public GameObject enemy;
     public GameObject fullMap;
+    public GameObject mainCamera;
+    public GameObject rain;
+    public GameObject[] checkFlags;
+    public GameObject canvas;
+    public GameObject tempCam;
     public Transform player;
 
     public static GameManager GM;
@@ -29,8 +34,9 @@ public class GameManager : MonoBehaviour
     float timerNitroInst;
     float timerFuelInst;
     float timerEnemyInst;
+    AudioSource music;
 
-
+    bool isGameStarted;
     bool nitroPresedd;
     bool isFullMap;
     Color nitroDisplayColor;
@@ -45,76 +51,100 @@ public class GameManager : MonoBehaviour
         nitroSliderColor = nitroSliderImage.color;
         fuelSliderColor = fuelSliderImage.color;
         isFullMap = false;
+        music = GetComponent<AudioSource>();
+        canvas.SetActive(false);
+        
     }
     
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.M))
+        if (GameObject.FindWithTag("Player") != null)
         {
-            isFullMap = !isFullMap;
-        }
-        fullMap.SetActive(isFullMap);
-        if (GameObject.FindWithTag("nitro") == null)
-        {
-            timerNitroInst += Time.deltaTime;
-            if (timerNitroInst > 3)
+            if (!isGameStarted)
             {
-                InstantiateNitroBottle();
-                timerNitroInst = 0;
-            }
-        }
+                tempCam.SetActive(false);
+                InstantiateCamera();
+                InstantiateRain();
+                InstantiateCheckFlags();
 
-        if (GameObject.FindWithTag("barrel") == null)
-        {
-            timerFuelInst += Time.deltaTime;
-            if (timerFuelInst > 3)
-            {
-                InstantiateFuelBarrel();
-                timerFuelInst = 0;
-            }
-        }
+                canvas.SetActive(true);
 
-        if (GameObject.FindWithTag("enemy") == null)
-        {
-            timerEnemyInst += Time.deltaTime;
-            if (timerEnemyInst > 3)
-            {
-                InstantiateEnemy();
-                timerEnemyInst = 0;
+                isGameStarted = true;
             }
-        }
+            
 
-        timerFuel += Time.deltaTime;
-        if (timerFuel > timeToFuelConsumption)
-        {
-            DecreaseFuel(fuelConsumption);
-            timerFuel = 0;
-        }
-        if (Input.GetKeyUp(KeyCode.Z))
-        {
-            nitroPresedd = !nitroPresedd;
-        }
-        CarController.carController.nitroPressed = nitroPresedd;
-        if (nitroPresedd)
-        {
-            ChangeNitroColorRed();
-        }
-        else
-        {
-            ChangeNitroColorOrigin();
-        }
-        if (nitroPresedd && CarController.carController.AccelInput > 0.8f)
-        {
-            fuelConsumption = 5;
-            NitroArrowDown(0);
-            if (NitroArrow.arrow.sliderNitro.value < 1)
+            if (Input.GetKeyUp(KeyCode.M))
             {
-                nitroPresedd = false;
+                isFullMap = !isFullMap;
             }
-        }
-        else
-        {
-            fuelConsumption = 1;
+            fullMap.SetActive(isFullMap);
+            if (GameObject.FindWithTag("nitro") == null)
+            {
+                timerNitroInst += Time.deltaTime;
+                if (timerNitroInst > 3)
+                {
+                    InstantiateNitroBottle();
+                    timerNitroInst = 0;
+                }
+            }
+
+            if (GameObject.FindWithTag("barrel") == null)
+            {
+                timerFuelInst += Time.deltaTime;
+                if (timerFuelInst > 3)
+                {
+                    InstantiateFuelBarrel();
+                    timerFuelInst = 0;
+                }
+            }
+
+            if (GameObject.FindWithTag("enemy") == null)
+            {
+                timerEnemyInst += Time.deltaTime;
+                if (timerEnemyInst > 3)
+                {
+                    InstantiateEnemy();
+                    timerEnemyInst = 0;
+                }
+            }
+
+            timerFuel += Time.deltaTime;
+            if (timerFuel > timeToFuelConsumption)
+            {
+                DecreaseFuel(fuelConsumption);
+                timerFuel = 0;
+            }
+            if (Input.GetKeyUp(KeyCode.Z))
+            {
+                nitroPresedd = !nitroPresedd;
+            }
+            if (CarController.carController != null)
+            {
+                CarController.carController.nitroPressed = nitroPresedd;
+            }
+
+            if (nitroPresedd)
+            {
+                ChangeNitroColorRed();
+            }
+            else
+            {
+                ChangeNitroColorOrigin();
+            }
+
+            if (nitroPresedd && CarController.carController.AccelInput > 0.8f)
+            {
+                fuelConsumption = 5;
+                NitroArrowDown(0);
+                if (NitroArrow.arrow.sliderNitro.value < 1)
+                {
+                    nitroPresedd = false;
+                }
+            }
+            else
+            {
+                fuelConsumption = 1;
+            }
         }
     }
 
@@ -188,5 +218,29 @@ public class GameManager : MonoBehaviour
         {
             Instantiate(enemy, enemyPoints[i].position, Quaternion.identity);
         }
+    }
+
+    public void InstantiateCamera()
+    {
+        Instantiate(mainCamera);
+    }
+
+    public void InstantiateRain()
+    {
+        Instantiate(rain);
+    }
+
+    public void InstantiateCheckFlags()
+    {
+        for (int i = 0; i < checkFlags.Length; i++)
+        {
+            Instantiate(checkFlags[i]);
+        }
+        
+    }
+
+    public void PlayMusic()
+    {
+        music.Play();
     }
 }
